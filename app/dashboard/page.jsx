@@ -2,19 +2,26 @@
 
 import { useState } from "react";
 
-const API_URL = "https://secondbrain-backend-1-solb.onrender.com";
+// Backend URL added here
+const API_URL = "https://secondbrain-backend-2mei.onrender.com";
 
 export default function Dashboard() {
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!title.trim() || !content.trim()) return;
+
+    if (!title.trim() || !content.trim()) {
+      alert("Please fill in both fields.");
+      return;
+    }
 
     setIsSubmitting(true);
-    
+    console.log("Connecting to:", API_URL);
+
     try {
       const response = await fetch(`${API_URL}/knowledge`, {
         method: "POST",
@@ -25,118 +32,114 @@ export default function Dashboard() {
       });
 
       if (response.ok) {
-        // Clear form on success
         setTitle("");
         setContent("");
         alert("Knowledge captured successfully!");
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("Server Error:", errorData);
+        alert("Failed to save. Please try again.");
       }
     } catch (error) {
       console.error("Failed to save:", error);
-      alert("Error saving knowledge.");
+      alert("Error connecting to server. Your backend might be waking up.");
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    /* Aligns the dashboard perfectly below the navbar */
-    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-[calc(100vh-64px)]">
-      <main className="max-w-5xl mx-auto px-6 py-10">
-        
+    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+
+      <main className="max-w-5xl mx-auto px-4 py-8">
+
         {/* Capture Section */}
         <section className="mb-12">
+
+          {/* FORM ADDED HERE */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white dark:bg-[#191e33] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-8 transition-all"
+            className="bg-white dark:bg-[#191e33] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-6"
           >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-blue-500/10 rounded-lg">
-                <span className="material-symbols-outlined text-blue-500 block">
-                  edit_square
-                </span>
-              </div>
-              <h2 className="text-xl font-bold tracking-tight">
+
+            <div className="flex items-center gap-2 mb-6">
+              <span className="material-symbols-outlined text-primary">
+                edit_square
+              </span>
+              <h2 className="text-lg font-semibold">
                 Capture New Knowledge
               </h2>
             </div>
 
-            <div className="space-y-5">
+            <div className="space-y-4">
+
               <input
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter a descriptive title..."
-                className="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-[#323b67] rounded-xl py-3.5 px-5 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all"
+                placeholder="Enter a title..."
+                className="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-[#323b67] rounded-lg py-3 px-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
               />
 
               <textarea
                 required
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="What's on your mind? Expand your thoughts here..."
-                className="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-[#323b67] rounded-xl py-3.5 px-5 min-h-[160px] focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none resize-none transition-all"
+                placeholder="What's on your mind?"
+                className="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-[#323b67] rounded-lg py-3 px-4 min-h-[140px] focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
               />
+
             </div>
 
+            {/* IMPORTANT: type="submit" */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`mt-6 w-full md:w-auto px-8 py-3 rounded-xl font-bold shadow-lg transition-all active:scale-95 ${
-                isSubmitting 
-                ? "bg-slate-400 cursor-not-allowed" 
-                : "bg-blue-600 hover:bg-blue-700 text-white"
-              }`}
+              className={`mt-6 bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-bold shadow-lg transition-opacity ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'opacity-100'}`}
             >
-              {isSubmitting ? "Saving to Brain..." : "Add Knowledge"}
+              {isSubmitting ? "Saving..." : "Add Knowledge"}
             </button>
+
           </form>
+
         </section>
 
-        {/* Stats / Quick Info Header */}
-        <div className="flex items-baseline justify-between mb-6">
-          <h3 className="text-lg font-semibold opacity-80">Recent Entries</h3>
-          <span className="text-sm text-blue-500 hover:underline cursor-pointer">View All</span>
-        </div>
-
-        {/* Cards Grid */}
+        {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
           <Card
             title="Neural Networks 101"
-            text="Artificial neural networks are inspired by biological brains and form the core of modern AI."
-            category="AI & Tech"
+            text="Artificial neural networks are inspired by biological brains."
           />
 
           <Card
             title="Sodium Bicarbonate"
-            text="A chemical compound commonly known as baking soda, used in cooking and neutralizing acids."
-            category="Science"
+            text="A chemical compound commonly known as baking soda."
           />
 
           <Card
             title="Marketing Strategy Q4"
-            text="Focus on omnichannel influencer campaigns and community-led growth initiatives."
-            category="Business"
+            text="Focus on omnichannel influencer campaigns."
           />
+
         </div>
+
       </main>
+
     </div>
   );
 }
 
-function Card({ title, text, category }) {
+function Card({ title, text }) {
   return (
-    <article className="group bg-white dark:bg-[#191e33] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 hover:border-blue-500/50 hover:shadow-lg transition-all cursor-default">
-      <div className="flex justify-between items-start mb-3">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500 bg-blue-500/10 px-2 py-1 rounded">
-          {category}
-        </span>
-      </div>
-      <h4 className="text-lg font-bold mb-3 group-hover:text-blue-500 transition-colors">
-        {title}
-      </h4>
-      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
+    <article className="bg-white dark:bg-[#191e33] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-primary/50 transition-all">
+
+      <h4 className="text-lg font-bold mb-2">{title}</h4>
+
+      <p className="text-sm text-slate-600 dark:text-slate-400">
         {text}
       </p>
+
     </article>
   );
 }

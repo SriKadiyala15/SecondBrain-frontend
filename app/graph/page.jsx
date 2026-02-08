@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const API_URL = "https://secondbrain-backend-1-solb.onrender.com";
+const API_URL = "https://secondbrain-backend-2mei.onrender.com";
 
 export default function GraphPage() {
   const [nodes, setNodes] = useState([]);
