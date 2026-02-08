@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+**Second Brain — AI Knowledge Capture App**
 
-## Getting Started
+**Second Brain** is a full-stack AI-powered knowledge management application that helps users capture, organize, and summarize their learning. Users can add notes, view structured insights, and access AI-generated summaries and tags to better understand their knowledge.
 
-First, run the development server:
+**Live Application Links-**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Frontend (User Interface):**
+https://second-brain-frontend-4t9n.vercel.app/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Backend API:**
+https://secondbrain-backend-2mei.onrender.com
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Features-**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Capture and store knowledge entries
 
-## Learn More
+AI-generated summaries and tags
 
-To learn more about Next.js, take a look at the following resources:
+Clean dashboard with responsive UI
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Dark mode support
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+FastAPI backend with PostgreSQL database
 
-## Deploy on Vercel
+Deployed full-stack architecture
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Tech Stack-**
+**Frontend:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Next.js (React + TypeScript)
+
+Tailwind CSS
+
+Vercel Deployment
+
+**Backend:**
+
+FastAPI
+
+PostgreSQL (Supabase)
+
+SQLAlchemy
+
+Render Deployment
+
+**Backend Privacy Notice-**
+The backend repository is private due to confidentiality and security reasons. Only the deployed backend API is accessible publicly for application functionality.
+
+**Important Note-**
+
+**NOTE:** Since the backend is hosted on Render’s free tier, it may take up to 30 seconds to start when accessed after inactivity. During this time, the app may appear to load slowly. Once started, it works normally.
+
+**How to Use-**
+
+1.Open the frontend link
+
+2.Add your knowledge entry
+
+3.View AI-generated summaries and tags
+
+4.Browse and organize your notes
+
+**Future Improvements-**
+
+User authentication
+
+Search and filtering
+
+Knowledge graphs and analytics
+
+Real-time updates
