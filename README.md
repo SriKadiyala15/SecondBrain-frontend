@@ -28,21 +28,21 @@ https://secondbrain-backend-2mei.onrender.com
 
 **Frontend:**
 
-*Next.js (React + TypeScript)
+->Next.js (React + TypeScript)
 
-*Tailwind CSS
+->Tailwind CSS
 
-*Vercel Deployment
+->Vercel Deployment
 
 **Backend:**
 
-*FastAPI
+->FastAPI
 
-*PostgreSQL (Supabase)
+->PostgreSQL (Supabase)
 
-*SQLAlchemy
+->SQLAlchemy
 
-*Render Deployment
+->Render Deployment
 
 **Backend Privacy Notice-**
 The backend repository is private due to confidentiality and security reasons. Only the deployed backend API is accessible publicly for application functionality.
@@ -63,10 +63,10 @@ The backend repository is private due to confidentiality and security reasons. O
 
 **Future Improvements-**
 
-*User authentication
+->User authentication
 
-*Search and filtering
+->Search and filtering
 
-*Knowledge graphs and analytics
+->Knowledge graphs and analytics
 
-*Real-time updates
+->Real-time updates
