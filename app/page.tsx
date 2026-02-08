@@ -1,65 +1,144 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+// Ensure this path is correct based on your file tree
+import { fetchKnowledge, addKnowledge } from "../components/api/api";
+
+// 1. Define the shape of your Knowledge data
+interface KnowledgeItem {
+  id?: string;
+  title: string;
+  content: string;
+  summary?: string;
+  tags?: string;
+  createdAt?: string;
+}
 
 export default function Home() {
+  // 2. Add Type Generics to your state
+  const [items, setItems] = useState<KnowledgeItem[]>([]);
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+
+  // Load existing knowledge
+  async function loadData(): Promise<void> {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await fetchKnowledge();
+      
+      // Robust array extraction to prevent .map() or .filter() errors
+      // Use type casting to tell TS we expect an array of KnowledgeItems
+      const actualData: KnowledgeItem[] = Array.isArray(data) 
+        ? data 
+        : (data?.knowledge || data?.items || []);
+      
+      // SORT: Ensure newest are at the top (Stack behavior)
+      setItems([...actualData].reverse());
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load knowledge data.");
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // 3. Type the Form Event
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) {
+      setError("Title and content are required.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const newItem = await addKnowledge({ title, content });
+
+      if (newItem) {
+        // Add to top of local state immediately
+        setItems((prev) => [newItem, ...prev]);
+        setTitle("");
+        setContent("");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Failed to add knowledge.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className="max-w-2xl mx-auto p-6 space-y-8 min-h-screen">
+      <h1 className="text-3xl font-black tracking-tight dark:text-white">Second Brain</h1>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg text-sm">
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4 bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl border dark:border-gray-700">
+        <input
+          value={title}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+          placeholder="Title of your discovery..."
+          className="w-full border dark:border-gray-700 bg-white dark:bg-gray-900 p-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+
+        <textarea
+          value={content}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
+          placeholder="What did you learn today?"
+          className="w-full border dark:border-gray-700 bg-white dark:bg-gray-900 p-3 rounded-xl min-h-[120px] outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 text-white font-bold px-4 py-3 rounded-xl hover:bg-blue-700 transition disabled:bg-blue-300 shadow-lg shadow-blue-500/20"
+        >
+          {loading ? "Capturing..." : "Add to Brain"}
+        </button>
+      </form>
+
+      <div className="space-y-4">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-gray-400">Recent Knowledge</h2>
+        {items.length > 0 ? (
+          items.map((item, index) => (
+            <div
+              key={item.id || index}
+              className="border dark:border-gray-700 p-5 rounded-2xl shadow-sm bg-white dark:bg-gray-800 hover:border-blue-500/50 transition-colors"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+              <h3 className="font-bold text-xl mb-2 dark:text-white">{item.title}</h3>
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                {item.summary || "No summary generated yet."}
+              </p>
+              {item.tags && (
+                <div className="flex gap-2 mt-4 flex-wrap">
+                  {item.tags.split(',').map((tag) => (
+                    <span key={tag.trim()} className="text-[10px] font-bold text-blue-500 bg-blue-500/10 px-2 py-1 rounded uppercase">
+                      #{tag.trim()}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          !loading && <p className="text-gray-500 italic">Your brain is empty. Add some knowledge!</p>
+        )}
+      </div>
+    </main>
   );
 }
