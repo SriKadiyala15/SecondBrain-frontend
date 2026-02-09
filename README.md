@@ -10,7 +10,7 @@ https://second-brain-frontend-4t9n.vercel.app/
 **Backend API:**
 https://secondbrain-backend-2mei.onrender.com
 
-**Second Brain – Live Demo Video**
+**Second Brain – Live Demo Video:**
 https://drive.google.com/file/d/1au3ILh4YOOPYi_rk9P82MldHcBt8HfGA/view?usp=sharing
 
 **Features-**
